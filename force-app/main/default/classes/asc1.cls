@@ -1,0 +1,1 @@
+public class asc1{ public Void sayHello(){String name = 'ashish singh';}}

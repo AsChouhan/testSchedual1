@@ -1,0 +1,1 @@
+public class tempClass1{ public Void sayHello(){ string name= 'ashish'; system.debug('***Name: '+name);} }

@@ -1,0 +1,17 @@
+<template>
+
+    <div style="background-color: white; ">
+        <div class="slds-grid slds-gutters">
+            <div class="slds-col slds-scrollable_y" style="max-height: 600px;">
+                <lightning-tree items={metadata} key-field="items" header="MetaData"
+                    onselect={handleSelect}></lightning-tree>
+            </div>
+            <div class="slds-col" style="position: relative; top: 50px;">
+                <textArea name="codeContainer" rows="22" cols="150">{body}</textArea>
+            </div>
+        </div>
+    </div>
+    <template if:true={showSpinnerBool}>
+        <lightning-spinner variant="brand" size="large"> </lightning-spinner>
+    </template>
+</template>

@@ -1,0 +1,1 @@
+public class aasheesh{ public string name = 'bhanu sharma'; public string className;}

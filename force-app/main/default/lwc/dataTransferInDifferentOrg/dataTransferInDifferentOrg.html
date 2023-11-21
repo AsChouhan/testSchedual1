@@ -1,0 +1,140 @@
+<template>
+    <lightning-card title="Salesforce Object">
+        <div class="slds-grid slds-gutters" style="height: 100%;">
+            <div class="slds-col slds-scrollable_y" style="max-height: 600px;width:50%">
+                <lightning-accordion allow-multiple-sections-open class="example-accordion"
+                    onsectiontoggle={handleSectionToggle}>
+                    <template for:each={objectList} for:item='item'>
+                        <lightning-accordion-section key={item.QualifiedApiName} name={item.QualifiedApiName}
+                            label={item.QualifiedApiName}>
+                            <lightning-datatable key-field="Id" name="childColumns" data={reletedObjects} columns={childColumn} selected-rows={selectedIds}
+                                onrowselection={handleSelect}>
+                            </lightning-datatable>
+                            <footer class="slds-clearfix slds-card__footer">
+                                <div class="slds-float_right">
+                                    <lightning-button onclick={AfterRelatedObjectSelected}
+                                        label="Proceed"></lightning-button>
+                                </div>
+                            </footer>
+                        </lightning-accordion-section>
+                    </template>
+                </lightning-accordion>
+            </div>
+            <div class="slds-col" style="width: 50%;max-height: 600px;overflow:hidden">
+                <div style="height: 48%;width: 100%">
+                    <template lwc:if={recordBool}>
+                        <lightning-datatable key-field="Id" data={gridData} columns={columns} selected-rows={selectedIds}
+                            onrowselection={selectedParentRecord}>
+                        </lightning-datatable>
+                        <footer class="slds-clearfix slds-card__footer">
+                            <div class="slds-float_right">
+                                <lightning-button onclick={selectChildRecord} label="Proceed"></lightning-button>
+                            </div>
+                        </footer>
+                    </template>
+                </div>
+                <div style="height: 48%;margin-top: 16px;width:100%;overflow: scroll">
+                    <div>
+                        <div class="slds-col my-spacing">
+                            <template lwc:if={finalBool}>
+                                <lightning-accordion allow-multiple-sections-open>
+                                     <template for:each={Totalrecords} for:item="records">
+                                        <lightning-accordion-section key={records.Name} label={records.Name} onsectiontoggle={handleChildTogle}>
+                                             <template for:each={records.child} for:item='item'>
+                                                 <lightning-accordion-section key={item.Name} label={item.Name}>
+                                                    <template lwc:if={innerBool}>
+                                                         <lightning-datatable key-field="Id" data-id={records.Name} data-name= {item.Name} data={item._children} 
+                                                        columns={columns} onrowselection={sendThisData}>
+                                                    </lightning-datatable>
+                                                    </template>
+                                                    <template lwc:else>
+                                                        <p>Their is No record </p>
+                                                    </template>
+                                                </lightning-accordion-section> 
+                                            </template>
+                                        </lightning-accordion-section>
+
+                                    </template>
+                                </lightning-accordion>
+
+                            </template>
+                        </div>
+                    </div>
+                    <lightning-button onclick={TransferData} label="Proceed"></lightning-button>
+                </div>
+            </div>
+        </div>
+        <template if:true={showSpinnerBool}>
+            <lightning-spinner variant="brand" size="large"> </lightning-spinner>
+        </template>
+    </lightning-card>
+</template>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <template>
+  <lightning-card title="Data Transfer in Different Org">
+      <div class="slds-p-around_medium">
+          <lightning-combobox
+              name="objectSelection"
+              label="Select an Object"
+              value={selectedObject}
+              placeholder="Select an Object"
+              options={objectOptions}
+              onchange={handleObjectChange}
+          ></lightning-combobox>
+      </div>
+  </lightning-card> -->
+<!-- <template lwc:if={bool} >
+    <div class="slds-p-around_medium lgc-bg">
+        <lightning-tree-grid
+            columns={gridColumn}
+            data={jsonList}
+            key-field="name"
+        ></lightning-tree-grid>
+    </div>
+</template> -->
+<!-- <template lwc:if={bool}>
+    <div style="height: 300px;">
+        <lightning-datatable key-field="id" data={jsonList} columns={gridColumn} onrowselection={handleSelect}>
+        </lightning-datatable>
+    </div>
+</template>
+<template lwc:else>
+    <div class="slds-p-around_medium lgc-bg">
+        <lightning-tree-grid
+            columns={gridColumn}
+            data={jsonList}
+            key-field="name"
+        ></lightning-tree-grid>
+    </div>
+</template>
+</template> -->

@@ -1,0 +1,211 @@
+<template>
+    <div style="border-top-left-radius: 10px;border-top-right-radius: 15px;background-color: white; ">
+        <div class="slds-grid slds-gutters ">
+            <div class="slds-col slds-p-around_medium slds-scrollable_y" style="max-height: 575px; max-width: 430px;">
+                <lightning-card title="Salesforce Objects">
+                    <lightning-tree items={objList} onselect={getDescribe}>
+                    </lightning-tree>
+                </lightning-card>
+            </div>
+
+            <template lwc:if={isCustom}>
+                <div class=" slds-col slds-float_left slds-p-around_medium slds-col slds-scrollable_y"
+                    style="max-height: 575px; width: 430px">
+                    <lightning-button variant='brand' label='Create Object' title='Create Object'
+                        onclick={handleIsCustom}>
+                    </lightning-button>
+                </div>
+            </template>
+            <template lwc:else>
+                <div class=" slds-col slds-modal__content slds-p-around_medium slds-col slds-scrollable_y"
+                    style="max-height: 575px; width: 430px">
+                    <template lwc:if={showObject}>
+                        <lightning-card title="Salesforce Object Configuration">
+                            <div class="slds-grid slds-wrap">
+                                <div class="slds-col slds-size_6-of-12 slds-p-horizontal--medium slds-m-bottom_medium">
+                                    <lightning-input required label="Full Name" value={basicObjectDetail.objectName}
+                                        onchange={getValue} data-id="fullName"></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_6-of-12 slds-p-horizontal--medium slds-m-bottom_medium">
+                                    <lightning-input required label="Label" value={basicObjectDetail.objectLabel}
+                                        onchange={getValue} data-id="label"></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_6-of-12 slds-p-horizontal--medium slds-m-bottom_medium">
+                                    <lightning-input required label="Plural Label" value={basicObjectDetail.PluralLabel}
+                                        onchange={getValue} data-id="pluralLabel"></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_6-of-12 slds-p-horizontal--medium slds-m-bottom_medium">
+                                    <lightning-input type="toggle" data-id="nameFieldType"
+                                        checked={basicObjectDetail.isAutoNumber} onchange={getValue} label={Type}
+                                        name="input2"></lightning-input>
+                                </div>
+                                <div class="slds-col slds-size_6-of-12 slds-p-horizontal--medium slds-m-bottom_medium">
+                                    <lightning-input required label="Name Field Label"
+                                        value={basicObjectDetail.nameFieldLabel} onchange={getValue}
+                                        data-id="nameFieldLabel"></lightning-input>
+                                </div>
+                            </div>
+                        </lightning-card></br>
+                        <lightning-card title="Object Fields">
+                            <button class="slds-button slds-button_brand slds-align_absolute-center"
+                                style="position: relative; bottom: 30px; left: 41%;" title="Create"
+                                onclick={addFields}>Add Field</button>
+                            <div class="slds-scrollable_y slds-box slds-theme_default" style="max-height: 160px;">
+                                <template lwc:if={hasField}>
+                                    <table class="slds-table slds-table_cell-buffer table-hover ">
+                                        <template for:each={objectFields} for:item="item">
+                                            <tbody key={item.name}>
+                                                <tr class="slds-hint-parent">
+                                                    <td>
+                                                        {item.label}
+                                                    </td>
+                                                    <td>
+                                                        <a data-id={item.name} onclick={getField}>Edit</a><p>hlo temp para.</p>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </template>
+                                    </table>
+                                </template>
+                                <template lwc:else>
+                                    <div class="slds-float_left">
+                                        No Fields On this Object....
+                                    </div>
+                                </template>
+                            </div>
+                        </lightning-card>
+                    </template>
+                    </br>
+
+                    <template lwc:if={showAddFields}>
+                        <lightning-card title="Fields Configuration">
+
+
+
+                            <template for:each={displayAddFields} for:item="field">
+                                <template lwc:if={field.isEditField}>
+                                    <lightning-card title="Edit Field" key={field.Id}>
+                                        <div class="slds-grid slds-wrap">
+                                            <div
+                                                class="slds-col slds-size_6-of-12 slds-p-horizontal--medium slds-m-bottom_medium">
+                                                <lightning-input required label="Full Name" value={selectedField.name}
+                                                    onchange={getFieldsValue} data-id={field.Id}
+                                                    data-name="fullName"></lightning-input>
+                                            </div>
+                                            <div
+                                                class="slds-col slds-size_6-of-12 slds-p-horizontal--medium slds-m-bottom_medium">
+                                                <lightning-input required label="Label" value={selectedField.label}
+                                                    onchange={getFieldsValue} data-id={field.Id}
+                                                    data-name="label"></lightning-input>
+                                            </div>
+                                            <!--  Template.. -->
+                                            <template lwc:if={LFL}>
+                                                <div
+                                                    class="slds-col slds-size_6-of-12 slds-p-horizontal--medium slds-m-bottom_medium">
+                                                    <lightning-input label="Length" onchange={getFieldsValue}
+                                                        value={selectedField.length} data-id={field.Id}
+                                                        data-name="length"></lightning-input>
+                                                </div>
+                                            </template>
+                                            <template lwc:if={LFLD}>
+                                                <div
+                                                    class="slds-col slds-size_6-of-12 slds-p-horizontal--medium slds-m-bottom_medium">
+                                                    <lightning-input label="Length" onchange={getFieldsValue}
+                                                        value={selectedField.precision} data-id={field.Id}
+                                                        data-name="precision"></lightning-input>
+                                                </div>
+                                                <div
+                                                    class="slds-col slds-size_6-of-12 slds-p-horizontal--medium slds-m-bottom_medium">
+                                                    <lightning-input label="Decimal Places" onchange={getFieldsValue}
+                                                        value={selectedField.digits} data-id={field.Id}
+                                                        data-name="DecimalPlaces"></lightning-input>
+                                                </div>
+                                            </template>
+                                            <!-- //Template.. -->
+                                            <div
+                                                class="slds-col slds-size_6-of-12 slds-p-horizontal--medium slds-m-bottom_medium">
+                                                <lightning-input required label="Field Type" value={selectedField.type}
+                                                    onchange={getFieldsValue} data-id={field.Id}
+                                                    data-name="FieldType"></lightning-input>
+                                            </div>
+                                            <div
+                                                class='slds-float-left slds-col slds-size_6-of-12 slds-p-horizontal--medium slds-m-bottom_medium'>
+                                                <lightning-button variant='brand' data-id={field.Id} label='Cancel'
+                                                    title='Delete' onclick={handleDelete}>
+                                                </lightning-button>
+                                            </div>
+                                        </div><hr>
+                                    </lightning-card>
+                                </template>
+                                <template lwc:else>
+                                    <lightning-card title="Custom Fields" key={field.Id}>
+                                        <div class="slds-grid slds-wrap ">
+                                            <div
+                                                class="slds-col slds-size_6-of-12 slds-p-horizontal--medium slds-m-bottom_medium">
+                                                <lightning-combobox name="progress" label="Select DataType"
+                                                    value='string' placeholder="Select DataType" options={dataType}
+                                                    data-id={field.Id} onchange={getFieldType}></lightning-combobox>
+                                            </div>
+                                            <template lwc:if={field.dataTypeSelected}>
+                                                <div
+                                                    class="slds-col slds-size_6-of-12 slds-p-horizontal--medium slds-m-bottom_medium">
+                                                    <lightning-input required label="Full Name"
+                                                        onchange={getFieldsValue} data-id={field.Id}
+                                                        data-name="fullName"></lightning-input>
+                                                </div>
+                                                <div
+                                                    class="slds-col slds-size_6-of-12 slds-p-horizontal--medium slds-m-bottom_medium">
+                                                    <lightning-input required label="Label" onchange={getFieldsValue}
+                                                        data-id={field.Id} data-name="label"></lightning-input>
+                                                </div>
+                                                <template lwc:if={field.LFL}>
+                                                    <div
+                                                        class="slds-col slds-size_6-of-12 slds-p-horizontal--medium slds-m-bottom_medium">
+                                                        <lightning-input label="Length" onchange={getFieldsValue}
+                                                            data-id={field.Id} data-name="length"></lightning-input>
+                                                    </div>
+                                                </template>
+                                                <template lwc:if={field.LFLD}>
+                                                    <div
+                                                        class="slds-col slds-size_6-of-12 slds-p-horizontal--medium slds-m-bottom_medium">
+                                                        <lightning-input label="precision" onchange={getFieldsValue}
+                                                            data-id={field.Id} data-name="precision"></lightning-input>
+                                                    </div>
+                                                    <div
+                                                        class="slds-col slds-size_6-of-12 slds-p-horizontal--medium slds-m-bottom_medium">
+                                                        <lightning-input label="Decimal Places"
+                                                            onchange={getFieldsValue} data-id={field.Id}
+                                                            data-name="DecimalPlaces"></lightning-input>
+                                                    </div>
+                                                </template>
+                                            </template>
+                                            <div class='slds-float-left slds-col slds-size_6-of-12 slds-p-horizontal--medium slds-m-bottom_medium'
+                                                style="position: relative; top: 23px;">
+                                                <lightning-button variant='brand' data-id={field.Id} label='Delete'
+                                                    title='Delete' onclick={handleDelete}>
+                                                </lightning-button>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                    </lightning-card>
+                                </template>
+                            </template>
+                        </lightning-card>
+                    </template></br>
+                    <footer class="slds-float_none">
+                        <lightning-button-group class="slds-align_absolute-center">
+                            <button class="slds-button slds-button_brand" title="Create"
+                                onclick={createObject1}>Create</button>&nbsp;
+                            <button class="slds-button slds-button_brand slds-align_absolute-center" title="Cancel"
+                                onclick={CancelUpsertion}>Cancel</button></lightning-button-group>
+                    </footer>
+                </div>
+
+            </template>
+        </div>
+
+        <template if:true={showSpinnerBool}>
+            <lightning-spinner variant="brand" size="large"> </lightning-spinner>
+        </template>
+    </div>
+</template>

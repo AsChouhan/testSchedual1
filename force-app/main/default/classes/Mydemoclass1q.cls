@@ -1,0 +1,1 @@
+public class Mydemoclass1q{ public Void sayHello(){ string name= 'HI MEHUL'; system.debug('***Name: '+name);} }

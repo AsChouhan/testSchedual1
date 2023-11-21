@@ -1,0 +1,55 @@
+<template>
+    <!-- <lightning-card >
+        <h3 slot="title">
+            Create Automation Screen
+        </h3>
+        <div class="slds-box slds-p-around_none slds-m-top_x-small slds-m-bottom_medium slds-m-horizontal_none">
+            <lightning-layout>
+                <lightning-layout-item flexibility="auto" padding="around-small">
+                    <div class="custom-box slds-box slds-p-around_medium slds-text-align_center">1</div>
+                </lightning-layout-item>
+                <lightning-layout-item flexibility="auto" padding="around-small">
+                    <div class="custom-box slds-box slds-p-around_medium slds-text-align_center">2</div>
+                </lightning-layout-item>
+                <lightning-layout-item flexibility="auto" padding="around-small">
+                    <div class="custom-box slds-box slds-p-around_medium slds-text-align_center">3</div>
+                </lightning-layout-item>
+                <lightning-layout-item flexibility="auto" padding="around-small">
+                    <div class="custom-box slds-box slds-p-around_medium slds-text-align_center">4</div>
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>
+        
+    </lightning-card> -->
+    <lightning-card title="Create Variables">
+        <template for:each={variablesArr} for:item="varProp" for:index="index" >
+            <div class="slds-grid slds-p-around_small" key={varProp.name}>
+                <div class="slds-col slds-p-horizontal_medium">
+                    <span>
+                        <lightning-combobox name="type" data-key="type" data-index={index} label="Type" value={varProp.type} placeholder="Select Type"
+                            options={options} onchange={handleChange}></lightning-combobox>
+                    </span>
+                </div>
+                <div class="slds-col slds-p-horizontal_medium">
+                    <span><lightning-input type="text" data-key="label" data-index={index} label="Name" value={varProp.label}
+                            onchange={handleChange}></lightning-input></span>
+                </div>
+                <div class="slds-col slds-p-horizontal_medium">
+                    <span><lightning-input type="text" data-key="value" data-index={index} label="Value" value={varProp.value}
+                            onchange={handleChange}></lightning-input></span>
+                </div>
+            </div>
+
+        </template>
+        
+        <div class="slds-grid slds-p-around_small slds-p-horizontal_large">
+            <lightning-button variant="brand" label="Add New Variable" title="addvar" onclick={onAddVariable}></lightning-button>
+        </div>
+    </lightning-card>
+
+    <lightning-button variant="brand" label="Generate" title="Generate" onclick={onGenerate}></lightning-button>
+
+    <div class="slds-col" style="position: relative; top: 40px;">
+        <textArea name="codeContainer" rows="22" cols="120">{body}</textArea>
+    </div>
+</template>

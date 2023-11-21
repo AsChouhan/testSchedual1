@@ -1,0 +1,1 @@
+import { LightningElement } from 'lwc'; export default class tempLWC extends LightningElement { bool = false;}
